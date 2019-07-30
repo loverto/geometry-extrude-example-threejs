@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import {Mesh} from "three";
 
-var FlyLine = function (flyLine,road) {
+var FlyLine = function (flyLine,road,roadmesh) {
+    Mesh.call(this,flyLine.geometry,flyLine.materials)
     this.name = "flyLine";
     this.road = road;
     // 车的最大速度
@@ -18,6 +19,8 @@ var FlyLine = function (flyLine,road) {
     this.mesh = flyLine;
     // 雷达半径
     this.radarRadius = 20;
+    this.roadmesh = roadmesh;
+    this.index = Math.floor((Math.random()*100)+1);
 
 
     // // 设置位置,位置为随机车道上的位置
@@ -50,11 +53,20 @@ FlyLine.inherit(Mesh, {
             //directionTmp.copy(this.direction).multiplyScalar(this.speed);
             // 位置加上移动方向
             //this.mesh.position.add(this.mesh.position);
-            this.mesh.geometry.attributes.position  = directionTmp.fromBufferAttribute(this.road,Math.floor((Math.random()*100)+1));
+
+            let vector3 = directionTmp.fromBufferAttribute(this.road,this.index++);
+            let vector = this.roadmesh.worldToLocal(vector3);
+            this.position.x = vector.x;
+            this.position.y = vector.y;
             // for (var i = 0 ; i<5;i++){
             //     let vector3 = directionTmp.fromBufferAttribute(this.road,i);
             // }
+            // let array = this.geometry.attributes.position.array;
+            // console.log("position",this.position);
+            // console.log("geo.position",this.geometry.attributes.position);
 
+
+            this.position
         };
     }(),
 });

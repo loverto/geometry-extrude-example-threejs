@@ -16,25 +16,25 @@ function init(json) {
     const geometry = new THREE.BufferGeometry();
     const material = new THREE.MeshStandardMaterial();
 
-    var line = turf.featureCollection(json.features);
+    // var line = turf.featureCollection(json.features);
 
     var flyline = [];
 
-    var chunk = turf.lineChunk(line, 1000, {units: 'miles'});
+    var chunk = turf.lineChunk(json, 1000, {units: 'miles'});
 
     function getRandomColor() {
         var letters = '0123456789ABCDEF';
-        var color = '0x';
+        var color = '#';
         for (var i = 0; i < 6; i++ ) {
             color += letters[Math.floor(Math.random() * 16)];
         }
         return color;
     }
 
-    chunk.features.slice(0,4).forEach(function (ff) {
+    chunk.features.slice(0,1000).forEach(function (ff) {
 
         const geometry = new THREE.BufferGeometry();
-        const material = new THREE.MeshStandardMaterial({color: parseInt(getRandomColor(),16)});
+        const material = new THREE.MeshStandardMaterial({color: parseInt(getRandomColor())});
 
         var gg = {}
         gg.features = [ff];
@@ -46,7 +46,7 @@ function init(json) {
             fitRect: {
                 x: 0,
                 y: 0,
-                width: 100
+                width: 1
             }
         });
         const {position, normal, indices} = polyline;
@@ -83,10 +83,10 @@ function init(json) {
     const mesh = new THREE.Mesh(geometry, material);
 
     // 创建可移动飞线
-    var fly = new FlyLines(flyline,float32BufferAttribute);
+    var fly = new FlyLines(flyline,float32BufferAttribute,mesh);
 
     fly.mobs.forEach(function (flyLine) {
-        scene.add(flyLine.mesh);
+        scene.add(flyLine);
     })
 
     scene.add(mesh);

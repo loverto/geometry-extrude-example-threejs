@@ -5,12 +5,13 @@ import FlyLine from './FlyLine';
  * 获得邻近汽车更新
  * @param flyLinesObjects 车数据
  */
-var FlyLines = function(flyLinesObjects,mesh) {
+var FlyLines = function(flyLinesObjects,road,mesh) {
     // 车
     this.flyLinesObjects = flyLinesObjects;
-    this.road = mesh;
+    this.road = road;
     // 可以移动的对象，比如车和云
     this.mobs = [];
+    this.roadmesh = mesh;
     this._generate();
 };
 FlyLines.inherit(Object, {
@@ -33,7 +34,7 @@ FlyLines.inherit(Object, {
      */
     _generate : function() {
         this.flyLinesObjects.forEach(function (flyLine) {
-            var fly = new FlyLine(flyLine,this.road);
+            var fly = new FlyLine(flyLine,this.road,this.roadmesh);
             this.mobs.push(fly)
         },this)
     }
